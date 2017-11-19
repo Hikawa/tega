@@ -58,6 +58,8 @@ project(":core") {
         compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
         compile "com.badlogicgames.ashley:ashley:$ashleyVersion"
         compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        compile 'com.github.salomonbrys.kodein:kodein:4.1.0'
+        compile group: 'io.github.libktx', name: 'ktx-app', version: '1.9.7-b1'
     }
 }
 
