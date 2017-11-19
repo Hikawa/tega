@@ -17,6 +17,8 @@ class Application: KtxGame<Screen>(), KodeinAware {
       bind<SpriteBatch>() with instance(SpriteBatch())
     }
 
+
+
     addScreen(BattleScreen(kodein))
     setScreen<BattleScreen>()
   }
