@@ -21,7 +21,7 @@ class Application: KtxGame<Screen>(), KodeinAware {
 
 
 
-    addScreen(BattleScreen(kodein))
+    addScreen(BattleScreen(kodein, instance<TmxMapLoader>().load("map1.tmx")))
     setScreen<BattleScreen>()
   }
 }

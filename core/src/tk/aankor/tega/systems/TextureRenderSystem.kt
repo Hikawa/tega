@@ -14,7 +14,7 @@ import tk.aankor.tega.components.TextureComponent
 import tk.aankor.tega.components.TransformComponent
 
 class TextureRenderSystem(override val kodein: Kodein)
-  : IteratingSystem(allOf(TextureComponent::class, TransformComponent::class).get(), 1)
+  : IteratingSystem(allOf(TextureComponent::class, TransformComponent::class).get(), 10)
   , KodeinAware {
   private val getTransform = mapperFor<TransformComponent>()
   private val getTexture = mapperFor<TextureComponent>()

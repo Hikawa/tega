@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.badlogic.gdx.maps.tiled.TmxMapLoader
+import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.KodeinAware
@@ -16,9 +16,9 @@ import ktx.app.KtxScreen
 import ktx.ashley.EngineEntity
 import ktx.ashley.add
 import ktx.ashley.entity
-import tk.aankor.tega.components.TextureComponent
+import tk.aankor.tega.components.AccessFilterComponent
+import tk.aankor.tega.components.GridComponent
 import tk.aankor.tega.components.TiledMapComponent
-import tk.aankor.tega.components.TransformComponent
 import tk.aankor.tega.systems.TextureRenderSystem
 import tk.aankor.tega.systems.TiledMapRenderSystem
 
@@ -27,24 +27,34 @@ fun <T: Component> EngineEntity.component(c: T): EngineEntity {
   return this
 }
 
-class BattleScreen(override val kodein: Kodein): KtxScreen, KodeinAware {
+class BattleScreen(override val kodein: Kodein, map: TiledMap): KtxScreen, KodeinAware {
   private val batch: SpriteBatch = instance()
 
   private val ecs = PooledEngine()
   private val worldCamera = OrthographicCamera()
-  private val viewPort = FitViewport(800f, 480f, worldCamera)
+  private val viewPort = FitViewport(
+    (map.properties["width"] as Int * map.properties["tilewidth"] as Int).toFloat(),
+    (map.properties["height"] as Int * map.properties["tileheight"] as Int).toFloat(), worldCamera)
 
   init {
     ecs.add {
       entity {
         component(TiledMapComponent(
-          instance<TmxMapLoader>().load("map1.tmx"),
+          map,
           kodein))
+        component(GridComponent(
+          Texture("border.png"),
+          map.properties["width"] as Int,
+          map.properties["height"] as Int
+        ))
+        component(AccessFilterComponent(map, listOf("Rock", "Tree")))
       }
+      /*
       entity {
         component(TransformComponent(0.0f, 0.0f))
         component(TextureComponent(Texture("badlogic.jpg")))
       }
+      */
       addSystem(TiledMapRenderSystem(kodein, worldCamera))
       addSystem(TextureRenderSystem(kodein))
     }
@@ -53,7 +63,7 @@ class BattleScreen(override val kodein: Kodein): KtxScreen, KodeinAware {
   override fun resize(width: Int, height: Int) {
     super.resize(width, height)
     viewPort.update(width, height)
-    worldCamera.position.set(400f, 240f, 0f)
+    worldCamera.position.set(viewPort.worldWidth / 2.0f, viewPort.worldHeight / 2.0f, 0f)
   }
 
   override fun render(delta: Float) {
