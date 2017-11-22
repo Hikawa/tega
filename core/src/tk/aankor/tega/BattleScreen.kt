@@ -29,12 +29,16 @@ fun <T: Component> EngineEntity.component(c: T): EngineEntity {
 
 class BattleScreen(override val kodein: Kodein, map: TiledMap): KtxScreen, KodeinAware {
   private val batch: SpriteBatch = instance()
+  private val width = map.properties["width"] as Int
+  private val height = map.properties["height"] as Int
+  private val tileWidth = map.properties["tilewidth"] as Int
+  private val tileHeight = map.properties["tileheight"] as Int
 
   private val ecs = PooledEngine()
   private val worldCamera = OrthographicCamera()
   private val viewPort = FitViewport(
-    (map.properties["width"] as Int * map.properties["tilewidth"] as Int).toFloat(),
-    (map.properties["height"] as Int * map.properties["tileheight"] as Int).toFloat(), worldCamera)
+    (width * tileWidth).toFloat(),
+    (height * tileHeight).toFloat(), worldCamera)
 
   init {
     ecs.add {
@@ -44,10 +48,8 @@ class BattleScreen(override val kodein: Kodein, map: TiledMap): KtxScreen, Kodei
           kodein))
         component(GridComponent(
           Texture("border.png"),
-          map.properties["width"] as Int,
-          map.properties["height"] as Int
-        ))
-        component(AccessFilterComponent(map, listOf("Rock", "Tree")))
+          width, height))
+        component(AccessFilterComponent(width, height).load(map, listOf("Rock", "Tree")))
       }
       /*
       entity {
