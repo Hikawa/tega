@@ -6,7 +6,9 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.github.salomonbrys.kodein.Kodein
@@ -16,10 +18,8 @@ import ktx.app.KtxScreen
 import ktx.ashley.EngineEntity
 import ktx.ashley.add
 import ktx.ashley.entity
-import tk.aankor.tega.components.AccessFilterComponent
-import tk.aankor.tega.components.GridComponent
-import tk.aankor.tega.components.TiledMapComponent
-import tk.aankor.tega.systems.TextureRenderSystem
+import tk.aankor.tega.components.*
+import tk.aankor.tega.systems.SpriteRenderSystem
 import tk.aankor.tega.systems.TiledMapRenderSystem
 
 fun <T: Component> EngineEntity.component(c: T): EngineEntity {
@@ -41,6 +41,7 @@ class BattleScreen(override val kodein: Kodein, map: TiledMap): KtxScreen, Kodei
     (height * tileHeight).toFloat(), worldCamera)
 
   init {
+
     ecs.add {
       entity {
         component(TiledMapComponent(
@@ -51,14 +52,14 @@ class BattleScreen(override val kodein: Kodein, map: TiledMap): KtxScreen, Kodei
           width, height))
         component(AccessFilterComponent(width, height).load(map, listOf("Rock", "Tree")))
       }
-      /*
       entity {
-        component(TransformComponent(0.0f, 0.0f))
-        component(TextureComponent(Texture("badlogic.jpg")))
+        component(TransformComponent(8.0f, 0.0f))
+        val spritesheet = Texture("malebase.png")
+        component(AnimationComponent(Animation(0.1f, TextureRegion(spritesheet, 32, 32, 32, 64))))
+        component(ResizeComponent(16.0f, 32.0f))
       }
-      */
       addSystem(TiledMapRenderSystem(kodein, worldCamera))
-      addSystem(TextureRenderSystem(kodein))
+      addSystem(SpriteRenderSystem(kodein))
     }
   }
 

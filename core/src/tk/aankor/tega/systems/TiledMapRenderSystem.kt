@@ -15,7 +15,7 @@ import tk.aankor.tega.components.GridComponent
 import tk.aankor.tega.components.TiledMapComponent
 
 class TiledMapRenderSystem(override val kodein: Kodein, val camera: OrthographicCamera) :
-  IteratingSystem(allOf(TiledMapComponent::class).get(), 0),
+  IteratingSystem(allOf(TiledMapComponent::class).get(), 1),
   KodeinAware {
   override fun processEntity(entity: Entity, deltaTime: Float) {
     val renderer = entity[TiledMapComponent.mapper]!!
