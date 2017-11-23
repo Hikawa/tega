@@ -13,6 +13,10 @@ import ktx.ashley.get
 import tk.aankor.tega.components.AccessFilterComponent
 import tk.aankor.tega.components.GridComponent
 import tk.aankor.tega.components.TiledMapComponent
+import tk.aankor.tega.wrappers.height
+import tk.aankor.tega.wrappers.tileHeight
+import tk.aankor.tega.wrappers.tileWidth
+import tk.aankor.tega.wrappers.width
 
 class TiledMapRenderSystem(override val kodein: Kodein, val camera: OrthographicCamera) :
   IteratingSystem(allOf(TiledMapComponent::class).get(), 1),
@@ -26,14 +30,14 @@ class TiledMapRenderSystem(override val kodein: Kodein, val camera: Orthographic
       val accessFilter = entity[AccessFilterComponent.mapper]
       val batch = instance<SpriteBatch>()
       batch.use {
-        for (i in 0 until grid.width)
-          (0 until grid.height)
+        for (i in 0 until renderer.map.width)
+          (0 until renderer.map.height)
             .filter { (accessFilter == null) || accessFilter.isAccessible(i, it) }
             .forEach {
               batch.draw(
-                grid.img,
-                (i * renderer.map.properties["tilewidth"] as Int).toFloat(),
-                (it * renderer.map.properties["tileheight"] as Int).toFloat())
+                grid.texture,
+                (i * renderer.map.tileWidth).toFloat(),
+                (it * renderer.map.tileHeight).toFloat())
             }
       }
     }
