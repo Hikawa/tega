@@ -16,6 +16,7 @@ import ktx.app.KtxScreen
 import ktx.ashley.add
 import ktx.ashley.entity
 import tk.aankor.tega.components.*
+import tk.aankor.tega.systems.CommandSystem
 import tk.aankor.tega.systems.SpriteRenderSystem
 import tk.aankor.tega.systems.TiledMapRenderSystem
 import tk.aankor.tega.wrappers.height
@@ -33,6 +34,8 @@ class BattleScreen(override val kodein: Kodein, map: TiledMap): KtxScreen, Kodei
     (map.width * map.tileWidth).toFloat(),
     (map.height * map.tileHeight).toFloat(),
     worldCamera)
+
+  val commandSystem = CommandSystem()
 
   init {
 
@@ -64,6 +67,7 @@ class BattleScreen(override val kodein: Kodein, map: TiledMap): KtxScreen, Kodei
       }
       addSystem(TiledMapRenderSystem(kodein, worldCamera))
       addSystem(SpriteRenderSystem(kodein))
+      addSystem(commandSystem)
     }
   }
 
