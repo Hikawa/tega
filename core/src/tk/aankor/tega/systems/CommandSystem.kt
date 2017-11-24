@@ -25,4 +25,9 @@ class CommandSystem: IteratingSystem(allOf(IdentityComponent::class).get(), 0) {
     }
   }
 
+  fun add(c: EntityCommand): CommandSystem {
+    queue += c
+    return this
+  }
+
 }

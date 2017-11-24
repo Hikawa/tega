@@ -29,13 +29,13 @@ class SpriteRenderSystem(override val kodein: Kodein)
         ResizeComponent().with(
           texture.texture.regionWidth.toFloat(),
           texture.texture.regionHeight.toFloat())
-      batch.draw(texture.texture, transform.x, transform.y, resize.width, resize.height)
+      batch.draw(texture.texture, transform.posiotion.x, transform.posiotion.y, resize.width, resize.height)
     } else if (animation != null) {
       val resize = entity[ResizeComponent.mapper]?:
         ResizeComponent().with(
           animation.frame.regionWidth.toFloat(),
           animation.frame.regionHeight.toFloat())
-      batch.draw(animation.frame, transform.x, transform.y, resize.width, resize.height)
+      batch.draw(animation.frame, transform.posiotion.x, transform.posiotion.y, resize.width, resize.height)
       if (animation.active)
         animation.time += deltaTime
     }

@@ -8,6 +8,7 @@ import com.github.salomonbrys.kodein.KodeinAware
 import com.github.salomonbrys.kodein.bind
 import com.github.salomonbrys.kodein.instance
 import ktx.app.KtxGame
+import ktx.async.enableKtxCoroutines
 
 class Application: KtxGame<Screen>(), KodeinAware {
   override lateinit var kodein: Kodein
@@ -18,8 +19,7 @@ class Application: KtxGame<Screen>(), KodeinAware {
       bind<SpriteBatch>() with instance(SpriteBatch())
       bind<TmxMapLoader>() with instance(TmxMapLoader())
     }
-
-
+    enableKtxCoroutines(0)
 
     addScreen(BattleScreen(kodein, instance<TmxMapLoader>().load("map1.tmx")))
     setScreen<BattleScreen>()
