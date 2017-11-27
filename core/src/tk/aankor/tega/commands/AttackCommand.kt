@@ -9,7 +9,8 @@ import tk.aankor.tega.components.TransformComponent
 import tk.aankor.tega.resources.AnimationPack
 import java.util.*
 
-class AttackCommand(uuid: UUID): EntityCommand(uuid) {
+class AttackCommand: EntityCommand {
+  lateinit var uuid: UUID
   lateinit var target: Vector2
   lateinit var animationPack: AnimationPack
 
@@ -18,11 +19,11 @@ class AttackCommand(uuid: UUID): EntityCommand(uuid) {
     return this
   }
 
-  override fun process(entity: Entity): Boolean {
+  override fun process(entity: Entity): EntityCommand? {
     entity.remove(AnimationComponent::class.java)
     val transform = entity[TransformComponent.mapper]!!
     entity.add(animationPack[target.cpy() - transform.posiotion])
-    return true
+    return null // TODO track animation length
   }
 
 }

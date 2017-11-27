@@ -73,8 +73,8 @@ class BattleScreen(override val kodein: Kodein, map: TiledMap): KtxScreen, Kodei
       addSystem(TiledMapRenderSystem(kodein, worldCamera))
       addSystem(SpriteRenderSystem(kodein))
       addSystem(commandSystem)
-      commandSystem.add(MoveCommand(
-        UUID.fromString("067e6162-3b6f-4ae2-a171-2470b63dff00")).with {
+      commandSystem.add(MoveCommand().with {
+        uuid = UUID.fromString("067e6162-3b6f-4ae2-a171-2470b63dff00")
         path = listOf(
           Vector2(32f, 128f),
           Vector2(32f, 32f),
@@ -82,8 +82,8 @@ class BattleScreen(override val kodein: Kodein, map: TiledMap): KtxScreen, Kodei
           Vector2(128f, 128f))
         speed = 0.4f
         animationPack = AnimationPack().load(1f/ 30f, "char1/move")
-        nextCommand = AttackCommand(
-          UUID.fromString("067e6162-3b6f-4ae2-a171-2470b63dff00")).with {
+        nextCommand = AttackCommand().with {
+          uuid = UUID.fromString("067e6162-3b6f-4ae2-a171-2470b63dff00")
           target = Vector2(256f, 128f)
           animationPack = AnimationPack().load(1f/ 30f, "char1/kick", false, true)
         }
