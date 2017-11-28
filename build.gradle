@@ -38,6 +38,9 @@ allprojects {
 project(":desktop") {
     apply plugin: "kotlin"
 
+    repositories {
+        jcenter()
+    }
 
     dependencies {
         compile project(":core")
@@ -52,6 +55,9 @@ project(":desktop") {
 project(":core") {
     apply plugin: "kotlin"
 
+    repositories {
+        jcenter()
+    }
 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
@@ -61,16 +67,18 @@ project(":core") {
         compile 'com.github.salomonbrys.kodein:kodein:4.1.0'
         compile group: 'io.github.libktx', name: 'ktx-app', version: '1.9.7-b1'
         compile group: 'io.github.libktx', name: 'ktx-ashley', version: '1.9.7-b1'
-        compile group: 'io.github.libktx', name: 'ktx-async', version: '1.9.7-b1'
+//        compile group: 'io.github.libktx', name: 'ktx-async', version: '1.9.7-b1'
         compile group: 'io.github.libktx', name: 'ktx-math', version: '1.9.7-b1'
-        compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version:'0.19.3'
+//        compile group: 'org.jetbrains.kotlinx', name: 'kotlinx-coroutines-core', version:'0.19.3'
+        compile 'io.github.aedans:kotlin-cons:2.0.2'
     }
-
+   /*
   kotlin {
     experimental {
       coroutines 'enable'
     }
   }
+  */
 }
 
 tasks.eclipse.doLast {

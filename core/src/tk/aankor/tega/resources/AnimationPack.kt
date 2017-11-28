@@ -1,35 +1,25 @@
 package tk.aankor.tega.resources
 
+import com.badlogic.gdx.graphics.g2d.Animation
+import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
-import tk.aankor.tega.components.AnimationComponent
+
 
 class AnimationPack {
-  private var fwd = AnimationComponent()
-  private var bwd = AnimationComponent()
-  private var left = AnimationComponent()
-  private var right = AnimationComponent()
+  lateinit var fwd: Animation<TextureRegion>
+  lateinit var bwd: Animation<TextureRegion>
+  lateinit var left: Animation<TextureRegion>
+  lateinit var right: Animation<TextureRegion>
 
-  fun load(duration: Float, baseFileName: String, looping: Boolean = true, mirror: Boolean = false): AnimationPack {
-    run {
-      fwd.looping = looping
-      fwd.load(duration, baseFileName + "_fwd.txt", mirror)
-    }
-    run {
-      bwd.looping = looping
-      bwd.load(duration, baseFileName + "_bwd.txt", mirror)
-    }
-    run {
-      left.looping = looping
-      left.load(duration, baseFileName + "_left.txt", mirror)
-    }
-    run {
-      right.looping = looping
-      right.load(duration, baseFileName + "_right.txt", mirror)
-    }
+  fun load(duration: Float, baseFileName: String, playMode: Animation.PlayMode = Animation.PlayMode.NORMAL): AnimationPack {
+    fwd = loadAnimationSheet(duration, baseFileName + "_fwd.txt", playMode)
+    bwd = loadAnimationSheet(duration, baseFileName + "_bwd.txt", playMode)
+    left = loadAnimationSheet(duration, baseFileName + "_left.txt", playMode)
+    right = loadAnimationSheet(duration, baseFileName + "_right.txt", playMode)
     return this
   }
 
-  operator fun get(dir: Vector2): AnimationComponent {
+  operator fun get(dir: Vector2): Animation<TextureRegion> {
     return if (dir.x == 0.0f)
       if (dir.y > 0.0f) bwd else fwd
     else if (dir.x < 0)

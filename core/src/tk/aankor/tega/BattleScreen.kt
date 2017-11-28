@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
+import com.badlogic.gdx.graphics.g2d.Animation
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.maps.tiled.TiledMap
 import com.badlogic.gdx.math.Vector2
@@ -12,11 +13,10 @@ import com.badlogic.gdx.utils.viewport.FitViewport
 import com.github.salomonbrys.kodein.Kodein
 import com.github.salomonbrys.kodein.KodeinAware
 import com.github.salomonbrys.kodein.instance
+import io.github.aedans.cons.toCons
 import ktx.app.KtxScreen
 import ktx.ashley.add
 import ktx.ashley.entity
-import tk.aankor.tega.commands.AttackCommand
-import tk.aankor.tega.commands.MoveCommand
 import tk.aankor.tega.components.*
 import tk.aankor.tega.resources.AnimationPack
 import tk.aankor.tega.systems.CommandSystem
@@ -39,7 +39,6 @@ class BattleScreen(override val kodein: Kodein, map: TiledMap): KtxScreen, Kodei
     (map.height * map.tileHeight).toFloat(),
     worldCamera)
 
-  val commandSystem = CommandSystem()
 
   init {
 
@@ -69,25 +68,23 @@ class BattleScreen(override val kodein: Kodein, map: TiledMap): KtxScreen, Kodei
           width = 32.0f
           height = 32.0f
         }
+        with<MovingComponent> {
+          path = listOf(
+            Vector2(32f, 128f),
+            Vector2(32f, 32f),
+            Vector2(128f, 32f),
+            Vector2(128f, 128f)).toCons()
+          speed = 22.0f
+          animationPack = AnimationPack().load(1f/ 30f, "char1/move", Animation.PlayMode.LOOP)
+        }
+        with<AttackingComponent> {
+          target = Vector2(256f, 128f)
+          animationPack = AnimationPack().load(1f/ 30f, "char1/kick")
+        }
       }
+      addSystem(CommandSystem())
       addSystem(TiledMapRenderSystem(kodein, worldCamera))
       addSystem(SpriteRenderSystem(kodein))
-      addSystem(commandSystem)
-      commandSystem.add(MoveCommand().with {
-        uuid = UUID.fromString("067e6162-3b6f-4ae2-a171-2470b63dff00")
-        path = listOf(
-          Vector2(32f, 128f),
-          Vector2(32f, 32f),
-          Vector2(128f, 32f),
-          Vector2(128f, 128f))
-        speed = 0.4f
-        animationPack = AnimationPack().load(1f/ 30f, "char1/move")
-        nextCommand = AttackCommand().with {
-          uuid = UUID.fromString("067e6162-3b6f-4ae2-a171-2470b63dff00")
-          target = Vector2(256f, 128f)
-          animationPack = AnimationPack().load(1f/ 30f, "char1/kick", false, true)
-        }
-      })
     }
   }
 

@@ -2,18 +2,31 @@ package tk.aankor.tega.components
 
 import com.badlogic.ashley.core.Component
 import com.badlogic.gdx.graphics.g2d.Animation
-import com.badlogic.gdx.graphics.g2d.TextureAtlas
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import ktx.ashley.mapperFor
+import tk.aankor.tega.resources.loadAnimationSheet
 
 class AnimationComponent: Component {
-  lateinit var animation: Animation<TextureRegion>
-  var looping: Boolean = true
-  var time = 0.0f
-  var active = true
+  var animation: Animation<TextureRegion>? = null
+    set(v) {
+      if (field != v) time = 0.0f
+      field = v
+    }
+  var endingListener: (() -> Unit)? = null
+  var time: Float = 0.0f
+    set(v) {
+      field = v
+      val a = animation
+      if ((a != null) && setOf(Animation.PlayMode.NORMAL, Animation.PlayMode.REVERSED).contains(a.playMode) &&
+        (field > animation!!.animationDuration)) {
+        val listener = endingListener
+        if (listener != null) listener()
+      }
+    }
 
   val frame: TextureRegion
-    get() = animation.getKeyFrame(time, looping)
+    get() = animation!!.getKeyFrame(time)
+
 
   // init helpers
   fun load(duration: Float, vararg frames: TextureRegion): AnimationComponent {
@@ -21,12 +34,13 @@ class AnimationComponent: Component {
     return this
   }
 
-  fun load(duration: Float, atlasFileName: String, mirror: Boolean = false): AnimationComponent {
-    val atlas = TextureAtlas(atlasFileName)
-    var regions = atlas.regions.toMutableList()
-    if (mirror)
-      regions.addAll(regions.reversed())
-    animation = Animation(duration, *Array(regions.size, { i -> regions[i] }))
+  fun load(
+    frameDuration: Float,
+    atlasFileName: String,
+    playMode: Animation.PlayMode = Animation.PlayMode.NORMAL)
+    : AnimationComponent
+  {
+    animation = loadAnimationSheet(frameDuration, atlasFileName, playMode)
     return this
   }
 

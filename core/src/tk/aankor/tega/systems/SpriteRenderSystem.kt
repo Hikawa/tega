@@ -36,8 +36,7 @@ class SpriteRenderSystem(override val kodein: Kodein)
           animation.frame.regionWidth.toFloat(),
           animation.frame.regionHeight.toFloat())
       batch.draw(animation.frame, transform.posiotion.x, transform.posiotion.y, resize.width, resize.height)
-      if (animation.active)
-        animation.time += deltaTime
+      animation.time += deltaTime
     }
   }
 
